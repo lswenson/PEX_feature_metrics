@@ -6,9 +6,9 @@
 
 #SBATCH --job-name=CalculateMetric.job
 
-#SBATCH --output=/home/swenson/projects/MetricsNew/CalculateMetric.out
+#SBATCH --output=/home/swenson/projects/PEX_feature_metrics/CalculateMetric.out
 
-#SBATCH --error=/home/swenson/projects/MetricsNew/CalculateMetric.err
+#SBATCH --error=/home/swenson/projects/PEX_feature_metrics/CalculateMetric.err
 
 #SBATCH -p med
 
@@ -18,4 +18,4 @@ source activate /home/swenson/.bashrc
 
 conda activate heatwave
 
-python3 /home/swenson/projects/MetricsNew/CalculateFrontal_Metric.py > CalculateMetric.log
+python3 /home/swenson/projects/PEX_feature_metrics/CalculateFrontal_Metric.py > CalculateMetric.log
