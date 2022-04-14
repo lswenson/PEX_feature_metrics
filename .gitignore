@@ -1,0 +1,16 @@
+#Ignore netCDF files
+*.nc
+
+#ignore numpy files
+*.npy
+
+#ignore figures
+*.png
+
+#ignore pycache
+__pycache__/
+
+.ipynb_checkpoints/
+*.err
+*.log
+*.out
