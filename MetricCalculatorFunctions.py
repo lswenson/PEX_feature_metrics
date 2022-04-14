@@ -24,8 +24,12 @@ def EquivalentPotentialTemperatureGradient(sph,T,p):
     EQtheta = mpcalc.equivalent_potential_temperature(p, T, dewpoint)
 
     DX,DY = mpcalc.lat_lon_grid_deltas(T['longitude'], T['latitude'], x_dim=- 1, y_dim=- 2, geod=None)
+    ddx = np.broadcast_to(DX,(EQtheta.shape[0],DX.shape[0],DX.shape[1]))
+    ddy = np.broadcast_to(DY,(EQtheta.shape[0],DY.shape[0],DY.shape[1]))
+
+    grad1,grad2 = mpcalc.gradient(EQtheta,axes=[-2,-1],deltas=[ddy,ddx])
     
-    return mpcalc.gradient(EQtheta,axes=[-2,-1],deltas=[DY,DX])
+    return np.power(np.power(grad1,2)+np.power(grad2,2),1/2)
 
 def ThermalFrontalParameter(T,lat,lon):
     
