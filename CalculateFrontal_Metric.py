@@ -28,7 +28,7 @@ for p in tqdm(range(101)):
 # save gradEPT_per
 
 # mask every gradEPT value below the 50th percentile
-gradEPT_mask = np.where(gradEPT<np.broadcast_to(gradEPT_per[50,:,:],gradEPT.shape),np.nan,gradEPT)
+gradEPT_mask = np.where(gradEPT.magnitude<np.broadcast_to(gradEPT_per[50,:,:],gradEPT.shape),np.nan,gradEPT)
 
 # run nanpercentile loop on the masked array to create the scores that translate to the ranks of the actual metric
 gradEPT_mask_per = np.zeros((101,T['t'].shape[-2],T['t'].shape[-1]))
@@ -38,16 +38,16 @@ for p in tqdm(range(101)):
 # create a time,lat,lon array with the metric scores 
 THEmetric = np.zeros(gradEPT.shape)
 for p in tqdm(range(1,101)):
-    THEmetric = np.where(gradEPT_mask>np.broadcast_to(gradEPT_mask_per[p,:,:],gradEPT.shape),gradEPT_mask_per[p,:,:],THEmetric)
+    THEmetric = np.where(gradEPT_mask.magnitude>np.broadcast_to(gradEPT_mask_per[p,:,:],gradEPT.shape),gradEPT_mask_per[p,:,:],THEmetric)
 
 # create a time,lat,lon array with the raw percentile scores.
 RAWper = np.zeros(gradEPT.shape)
 for p in tqdm(range(1,101)):
-    RAWper = np.where(gradEPT>np.broadcast_to(gradEPT_per[p,:,:],gradEPT.shape),gradEPT_per[p,:,:],RAWper)
+    RAWper = np.where(gradEPT.magnitude>np.broadcast_to(gradEPT_per[p,:,:],gradEPT.shape),gradEPT_per[p,:,:],RAWper)
 
 coords = dict(
 
-    time = (['events'],T['time']),
+    time = (['time'],T['time']),
     latitude = (['latitude'],T['latitude']),
     longitude = (['longitude'],T['longitude'])
 
@@ -67,6 +67,6 @@ plot_var_out = xr.Dataset(
 
     )
 
-plot_var_out.to_netcdf('/home/swenson/projects/MetricsNew/gradEPT_Frontal_percentile.nc',mode='w')
+plot_var_out.to_netcdf('/home/swenson/projects/PEX_feature_metrics/gradEPT_Frontal_percentile.nc',mode='w')
 
 print('DONE')

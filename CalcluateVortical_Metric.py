@@ -19,7 +19,7 @@ V = V.resample(time=str(hours)+'H').nearest()
 
 RelVortAdv = mcf.RelativeVorticityAdvection(RelVort,U,V)
 
-RelVortAdv_mask = np.where(RelVortAdv>=0,RelVortAdv,np.nan)
+RelVortAdv_mask = np.where(RelVortAdv.magnitude>=0,RelVortAdv,np.nan)
 
 # run nanpercenitle on the masked RelVortAdv array
 PER = np.zeros((101,RelVortAdv.shape[-2],RelVortAdv.shape[-1]))
@@ -29,11 +29,11 @@ for p in range(101):
 # make a time,lat,lon array of the positive RelVortAdv percentile values.
 THEmetric = np.zeros(RelVortAdv.shape)
 for p in range(1,101):
-    THEmetric = np.where(RelVortAdv>np.broadcast_to(PER[p,:,:],RelVortAdv.shape),PER[p,:,:],THEmetric)
+    THEmetric = np.where(RelVortAdv.magnitude>np.broadcast_to(PER[p,:,:],RelVortAdv.shape),PER[p,:,:],THEmetric)
 
 coords = dict(
 
-    time = (['events'],U['time']),
+    time = (['time'],U['time']),
     latitude = (['latitude'],U['latitude']),
     longitude = (['longitude'],U['longitude'])
 
@@ -52,6 +52,6 @@ plot_var_out = xr.Dataset(
 
     )
 
-plot_var_out.to_netcdf('/home/swenson/projects/MetricsNew/PositiveRelativeVorticityAdvection_Percentile.nc',mode='w')
+plot_var_out.to_netcdf('/home/swenson/projects/PEX_feature_metrics/PositiveRelativeVorticityAdvection_Percentile.nc',mode='w')
 
 print('DONE')

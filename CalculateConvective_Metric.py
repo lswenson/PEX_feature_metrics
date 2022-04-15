@@ -15,7 +15,7 @@ CAPE = CAPE.resample(time=str(hours)+'H').nearest()
 ddt = mcf.dCAPEdt(CAPE,dt)
 
 # mask positive ddt values (CAPE Generation isn't interesting)
-NEGddt = np.where(ddt<=0,ddt,np.nan)
+NEGddt = np.where(ddt.magnitude<=0,ddt,np.nan)
 
 # run nanpercenitle on the masked ddt array
 PERddt = np.zeros((101,CAPE.shape[-2],CAPE.shape[-1]))
@@ -25,11 +25,11 @@ for p in range(101):
 # make a time,lat,lon array of the negative dCAPEdt percentile values.
 THEmetric = np.zeros(NEGddt.shape)
 for p in range(1,101):
-    THEmetric = np.where(-1*NEGddt>np.broadcast_to(PERddt[p,:,:],NEGddt.shape),PERddt[p,:,:],THEmetric)
+    THEmetric = np.where(-1*NEGddt.magnitude>np.broadcast_to(PERddt[p,:,:],NEGddt.shape),PERddt[p,:,:],THEmetric)
 
 coords = dict(
 
-    time = (['events'],CAPE['time']),
+    time = (['time'],CAPE['time']),
     latitude = (['latitude'],CAPE['latitude']),
     longitude = (['longitude'],CAPE['longitude'])
 
@@ -48,6 +48,6 @@ plot_var_out = xr.Dataset(
 
     )
 
-plot_var_out.to_netcdf('/home/swenson/projects/MetricsNew/CAPE_consumption_percentile.nc',mode='w')
+plot_var_out.to_netcdf('/home/swenson/projects/PEX_feature_metrics/CAPE_consumption_percentile.nc',mode='w')
 
 print('DONE')
