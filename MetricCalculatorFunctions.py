@@ -38,8 +38,10 @@ def ThermalFrontalParameter(T,lat,lon):
     magGradT = np.power(np.power(dTdy,2)+np.power(dTdx,2),1/2)
 
     DX,DY = mpcalc.lat_lon_grid_deltas(T['longitude'], T['latitude'], x_dim=- 1, y_dim=- 2, geod=None)
+    ddx = np.broadcast_to(DX,(T.shape[0],DX.shape[0],DX.shape[1]))
+    ddy = np.broadcast_to(DY,(T.shape[0],DY.shape[0],DY.shape[1]))
     
-    dMGTdy,dMGTdx = mpcalc.gradient(magGradT, axes=[1,2], deltas=[DY,DX])
+    dMGTdy,dMGTdx = mpcalc.gradient(magGradT, axes=[1,2], deltas=[ddy,ddx])
     
     Yside = np.multiply(dMGTdy,np.divide(dTdy,magGradT))
     Xside = np.multiply(dMGTdx,np.divide(dTdx,magGradT))
@@ -55,10 +57,12 @@ def dCAPEdt(CAPE,dt):
 def RelativeVorticityAdvection(vorticity,u,v):
 
     DX,DY = mpcalc.lat_lon_grid_deltas(u['longitude'], u['latitude'], x_dim=- 1, y_dim=- 2, geod=None)
+    ddx = np.broadcast_to(DX,(u.shape[0],DX.shape[0],DX.shape[1]))
+    ddy = np.broadcast_to(DY,(v.shape[0],DY.shape[0],DY.shape[1]))
 
-    VA = mpcalc.advection(vorticity, u=u, v=v, xdim=-1, y_dim=-2, dx=DX, dy=DY)
+    VA = mpcalc.advection(vorticity, u=u, v=v, x_dim=-1, y_dim=-2, dx=ddx, dy=ddy)
 
-    return
+    return VA
 
 def FindCutOffLow(GHT200,GHT300,U,TFP):
     # MAYBE WE DONT NEED TO USE THIS
