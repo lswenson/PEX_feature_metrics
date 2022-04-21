@@ -12,7 +12,7 @@
 
 #SBATCH -p med
 
-#SBATCH --time=6:00:00
+#SBATCH --time=18:00:00
 
 source activate /home/swenson/.bashrc
 
