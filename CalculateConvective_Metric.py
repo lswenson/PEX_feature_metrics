@@ -12,13 +12,13 @@ dt = hours*60*60
 CAPE = xr.open_mfdataset('/home/swenson/era5_data_direct_1.0degree_Version3/cape/*.nc',concat_dim='time',combine='by_coords')
 CAPE = CAPE.resample(time=str(hours)+'H').nearest()
 
-ddt = mcf.dCAPEdt(CAPE,dt)
+ddt = mcf.dCAPEdt(CAPE['cape'],dt)
 
 # mask positive ddt values (CAPE Generation isn't interesting)
 NEGddt = np.where(ddt.magnitude<=0,ddt,np.nan)
 
 # run nanpercenitle on the masked ddt array
-PERddt = np.zeros((101,CAPE.shape[-2],CAPE.shape[-1]))
+PERddt = np.zeros((101,CAPE['cape'].shape[-2],CAPE['cape'].shape[-1]))
 for p in range(101):
     PERddt[p,:,:] = np.nanpercentile(-1*NEGddt,q=p,axis=0)
 

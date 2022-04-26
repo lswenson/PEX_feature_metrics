@@ -52,7 +52,7 @@ def dCAPEdt(CAPE,dt):
 
     ddt = mpcalc.gradient(CAPE,axes=[0],deltas=[dt])
 
-    return ddt
+    return ddt[0]
 
 def RelativeVorticityAdvection(vorticity,u,v):
 

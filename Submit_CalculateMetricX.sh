@@ -18,4 +18,4 @@ source activate /home/swenson/.bashrc
 
 conda activate heatwave
 
-python3 /home/swenson/projects/PEX_feature_metrics/CalculateConvective_Metric.py > CalculateMetric.log
+python3 /home/swenson/projects/PEX_feature_metrics/CalculateVortical_Metric.py > CalculateMetric.log
