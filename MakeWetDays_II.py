@@ -4,7 +4,7 @@ from tqdm import tqdm
 
 pcip_path = '/home/swenson/era5_data_direct_1.0degree_Version3/tp/'
 flist = []
-for year in tqdm(range(2003,2011)):
+for year in tqdm(range(1980,2003)):
     pcip = xr.open_dataset(pcip_path+'ERA5_'+str(year)+'_tp.nc')
 
     pcip1 = pcip.resample(time='3H').sum()
