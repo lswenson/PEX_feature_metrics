@@ -25,7 +25,7 @@ for p in range(101):
 # make a time,lat,lon array of the negative dCAPEdt percentile values.
 THEmetric = np.zeros(NEGddt.shape)
 for p in range(1,101):
-    THEmetric = np.where(-1*NEGddt.magnitude>np.broadcast_to(PERddt[p,:,:],NEGddt.shape),PERddt[p,:,:],THEmetric)
+    THEmetric = np.where(-1*NEGddt.magnitude>np.broadcast_to(PERddt[p,:,:],NEGddt.shape),p,THEmetric)
 
 coords = dict(
 

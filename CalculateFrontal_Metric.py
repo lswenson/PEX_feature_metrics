@@ -38,12 +38,12 @@ for p in tqdm(range(101)):
 # create a time,lat,lon array with the metric scores 
 THEmetric = np.zeros(gradEPT.shape)
 for p in tqdm(range(1,101)):
-    THEmetric = np.where(gradEPT_mask.magnitude>np.broadcast_to(gradEPT_mask_per[p,:,:],gradEPT.shape),gradEPT_mask_per[p,:,:],THEmetric)
+    THEmetric = np.where(gradEPT_mask.magnitude>np.broadcast_to(gradEPT_mask_per[p,:,:],gradEPT.shape),p,THEmetric)
 
 # create a time,lat,lon array with the raw percentile scores.
 RAWper = np.zeros(gradEPT.shape)
 for p in tqdm(range(1,101)):
-    RAWper = np.where(gradEPT.magnitude>np.broadcast_to(gradEPT_per[p,:,:],gradEPT.shape),gradEPT_per[p,:,:],RAWper)
+    RAWper = np.where(gradEPT.magnitude>np.broadcast_to(gradEPT_per[p,:,:],gradEPT.shape),p,RAWper)
 
 coords = dict(
 

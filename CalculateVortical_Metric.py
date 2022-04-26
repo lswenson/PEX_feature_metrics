@@ -30,7 +30,7 @@ for p in tqdm(range(101)):
 # make a time,lat,lon array of the positive RelVortAdv percentile values.
 THEmetric = np.zeros(RelVortAdv.shape)
 for p in tqdm(range(1,101)):
-    THEmetric = np.where(RelVortAdv.values>np.broadcast_to(PER[p,:,:],RelVortAdv.shape),PER[p,:,:],THEmetric)
+    THEmetric = np.where(RelVortAdv.values>np.broadcast_to(PER[p,:,:],RelVortAdv.shape),p,THEmetric)
 
 coords = dict(
 
