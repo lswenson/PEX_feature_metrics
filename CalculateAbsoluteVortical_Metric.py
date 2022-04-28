@@ -21,7 +21,7 @@ V = V.resample(time=str(hours)+'H').nearest()
 OMEGA = 7.2921159e-5  #rotation rate of the earth in radians / second
 f = 2 * OMEGA * np.sin(np.radians(U.latitude.values))
 
-_,PlanetaryVort,_ = np.meshgrid(np.arange(len(U.time)),f,U.longitude.values,indexing = 'ij') * units('s-1')
+_,PlanetaryVort,_ = np.meshgrid(np.arange(len(U.time)),f,U.longitude.values,indexing = 'ij')# * units('s-1')
 
 TotVortAdv = mcf.RelativeVorticityAdvection(RelVort['vo']+PlanetaryVort,U['u'],V['v'])
 
@@ -36,6 +36,42 @@ for p in tqdm(range(101)):
 THEmetric = np.zeros(TotVortAdv.shape)
 for p in tqdm(range(1,101)):
     THEmetric = np.where(TotVortAdv.values>np.broadcast_to(PER[p,:,:],TotVortAdv.shape),p,THEmetric)
+
+# THEmetric_within_range = np.zeros(THEmetric.shape)
+# for tt in range(THEmetric_within_range.shape[0]):
+#     if tt == 0:
+#         t1=0
+#         t2=1
+#     elif tt == THEmetric_within_range.shape[0]-1:
+#         t1=-2
+#         t2=-1
+#     else:
+#         t1=tt-1
+#         t2=tt+2
+#     for jj in range(THEmetric_within_range.shape[1]):
+#         if jj == 0:
+#             j1=0
+#             j2=1
+#         elif jj == THEmetric_within_range.shape[1]-1:
+#             j1=-2
+#             j2=-1
+#         else:
+#             j1=jj-1
+#             j2=jj+2
+#         for ii in range(THEmetric_within_range.shape[2]):
+#             if ii == 0:
+#                 i1=0
+#                 i2=1
+#             elif ii == THEmetric_within_range.shape[2]-1:
+#                 i1=-2
+#                 i2=-1
+#             else:
+#                 i1=ii-1
+#                 i2=ii+2
+            
+#             if 
+#             within_range = THEmetric
+        
 
 coords = dict(
 
