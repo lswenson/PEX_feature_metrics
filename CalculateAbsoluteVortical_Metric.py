@@ -18,19 +18,24 @@ U = U.resample(time=str(hours)+'H').nearest()
 V = xr.open_mfdataset('/home/swenson/era5_data_direct_1.0degree_Version3/V_'+str(level)+'hPa/*.nc',concat_dim='time',combine='by_coords')
 V = V.resample(time=str(hours)+'H').nearest()
 
-RelVortAdv = mcf.RelativeVorticityAdvection(RelVort['vo'],U['u'],V['v'])
+OMEGA = 7.2921159e-5  #rotation rate of the earth in radians / second
+f = 2 * OMEGA * np.sin(np.radians(U.latitude.values))
 
-RelVortAdv_mask = np.where(RelVortAdv>=0,RelVortAdv,np.nan)
+_,PlanetaryVort,_ = np.meshgrid(np.arange(len(U.time)),f,U.longitude.values,indexing = 'ij') * units('s-1')
+
+TotVortAdv = mcf.RelativeVorticityAdvection(RelVort['vo']+PlanetaryVort,U['u'],V['v'])
+
+TotVortAdv_mask = np.where(TotVortAdv>=0,TotVortAdv,np.nan)
 
 # run nanpercenitle on the masked RelVortAdv array
-PER = np.zeros((101,RelVortAdv.shape[-2],RelVortAdv.shape[-1]))
+PER = np.zeros((101,TotVortAdv.shape[-2],TotVortAdv.shape[-1]))
 for p in tqdm(range(101)):
-    PER[p,:,:] = np.nanpercentile(RelVortAdv_mask,q=p,axis=0)
+    PER[p,:,:] = np.nanpercentile(TotVortAdv_mask,q=p,axis=0)
 
 # make a time,lat,lon array of the positive RelVortAdv percentile values.
-THEmetric = np.zeros(RelVortAdv.shape)
+THEmetric = np.zeros(TotVortAdv.shape)
 for p in tqdm(range(1,101)):
-    THEmetric = np.where(RelVortAdv.values>np.broadcast_to(PER[p,:,:],RelVortAdv.shape),p,THEmetric)
+    THEmetric = np.where(TotVortAdv.values>np.broadcast_to(PER[p,:,:],TotVortAdv.shape),p,THEmetric)
 
 coords = dict(
 
@@ -42,7 +47,7 @@ coords = dict(
 
 data_vars=dict(
 
-    PositiveRelativeVorticityAdvection_Percentile = (['time','latitude','longitude'], THEmetric)
+    PositiveTotalVorticityAdvection_Percentile = (['time','latitude','longitude'], THEmetric)
 
     )
 
@@ -53,6 +58,6 @@ plot_var_out = xr.Dataset(
 
     )
 
-plot_var_out.to_netcdf('/home/swenson/projects/PEX_feature_metrics/PositiveRelativeVorticityAdvection_Percentile.nc',mode='w')
+plot_var_out.to_netcdf('/home/swenson/projects/PEX_feature_metrics/PositiveTotalVorticityAdvection_Percentile.nc',mode='w')
 
 print('DONE')
